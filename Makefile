@@ -1,42 +1,32 @@
-# Ustawienia mikrokontrolera Atmega32A
-MCU = atmega32a
+.PHONY: all build cmake clean build-type check-cpu format_all
+
+MCU = atmega32
 F_CPU = 8000000UL
+MY_PROJECT_NAME = my_project
+BUILD_TYPE ?= Debug
+BUILD_DIR := build
 
-# Nazwa twojego pliku źródłowego (bez rozszerzenia)
-TARGET = my_program
+all: build
 
-PROJECT_DIR = PROJECT
-
-# Katalog docelowy, gdzie mają być umieszczone pliki wyjściowe
-BUILD_DIR = build
-
-# # Ścieżka do avr-gcc
-# AVR_GCC_PATH = /ścieżka/do/twojego/avr-gcc
-
-# Opcje kompilatora
-CC = avr-gcc
-CFLAGS = -g -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
-
-# Lista plików źródłowych
-SRCS = PROJECT/main.c
-
-# Domyślny cel kompilacji
-all: $(BUILD_DIR)/$(TARGET).hex 
-
-${BUILD_DIR}:
+${BUILD_DIR}/Makefile:
 	cmake \
 		-B${BUILD_DIR} \
-		-DPROJECT_NAME=$(TARGET)\
-		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+		-DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+		-DMY_PROJECT_NAME=$(MY_PROJECT_NAME) \
+		-DMCU=$(MCU) \
+		-DF_CPU=$(F_CPU) \
+		
 
-$(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR) $(SRCS)
-	$(CC) $(CFLAGS) -o $@ $(SRCS)
+cmake: ${BUILD_DIR}/Makefile
 
+build: cmake
+	$(MAKE) -C ${BUILD_DIR} --no-print-directory
 
 clean:
 	@rm -rf $(BUILD_DIR)
 
-flash: $(BUILD_DIR)/$(TARGET).hex
+flash: ${BUILD_DIR}/$(MY_PROJECT_NAME).bin
 	avrdude -c usbasp -p $(MCU) -U flash:w:$^
 
 # exmple test for makefile syntax)
