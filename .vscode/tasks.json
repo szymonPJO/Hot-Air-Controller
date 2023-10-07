@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "make clean && clear && make",
+            "command": "make clean && clear && make && make flash",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
