@@ -3,4 +3,28 @@
         "--compile-commands-dir=build",
         "--query-driver=/usr/bin/avr-gcc",
     ],
+    "files.associations": {
+        "*.h": "c",
+        "*.json": "jsonc",
+    },
+    "editor.rulers": [
+        {
+            "column": 120,
+            "color": "#44887f1c"
+        }
+    ],
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    // "editor.defaultFormatter": "zachflower.uncrustify",
+    // "editor.formatOnPaste": false,
+    // "editor.formatOnType": false,
+    // "editor.formatOnSave": true,
+    // "formattingToggle.affects": [
+    //   "editor.formatOnSave"
+    // ],
+    "todohighlight.isCaseSensitive": false,
+    "debug.disassemblyView.showSourceCode": true,
+    // "editor.fontSize": 13,
+    "terminal.integrated.fontSize": 10,
 }

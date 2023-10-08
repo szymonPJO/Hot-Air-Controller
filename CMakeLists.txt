@@ -4,7 +4,14 @@ cmake_minimum_required(VERSION 3.12)
 # set(F_CPU 8000000UL)
 set(CMAKE_PROJECT_NAME ${MY_PROJECT_NAME})
 
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
+# COMPILLER #1
+set(TOOLCHAIN_PREFIX avr-)
+set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}gcc)
+set(CMAKE_ASM_COMPILER ${CMAKE_C_COMPILER})
+# set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++ ${FLAGS} ${CPP_FLAGS})
+set(CMAKE_OBJCOPY ${TOOLCHAIN_PREFIX}objcopy)
+set(CMAKE_SIZE ${TOOLCHAIN_PREFIX}size)
+set(CMAKE_C_FLAGS ${FLAGS})
 set(PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/PROJECT)
 
 set(CPU_PARAMETERS
@@ -12,25 +19,17 @@ set(CPU_PARAMETERS
 -DF_CPU=${F_CPU})
 project(${CMAKE_PROJECT_NAME})
 
-######### COMPILLER #########
+######### COMPILLER #2 #########
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR avr)
 
 # Some default GCC settings
-set(TOOLCHAIN_PREFIX avr-)
 set(FLAGS
 "-fdata-sections -ffunction-sections \
  -Wl,--gc-sections")
 # set(CPP_FLAGS
 #     "-fno-rtti -fno-exceptions \
 #     -fno-threadsafe-statics")
-
-set(CMAKE_C_COMPILER /usr/bin/avr-gcc)
-set(CMAKE_ASM_COMPILER ${CMAKE_C_COMPILER})
-# set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PREFIX}g++ ${FLAGS} ${CPP_FLAGS})
-set(CMAKE_OBJCOPY ${TOOLCHAIN_PREFIX}objcopy)
-set(CMAKE_SIZE ${TOOLCHAIN_PREFIX}size)
-set(CMAKE_C_FLAGS ${FLAGS})
 
 set(CMAKE_EXECUTABLE_SUFFIX_C ".elf")
 set(CMAKE_EXECUTABLE_SUFFIX_ASM ".elf")

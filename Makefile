@@ -1,9 +1,8 @@
-.PHONY: all build cmake clean build-type check-cpu format_all
-
-MCU = atmega32
-F_CPU = 8000000UL
+MCU = atmega88p
+F_CPU ?= 8000000UL
 MY_PROJECT_NAME = my_project
-BUILD_TYPE ?= Debug
+# BUILD_TYPE ?= Debug
+BUILD_TYPE ?= Release
 BUILD_DIR := build
 
 all: build
@@ -33,4 +32,4 @@ flash: ${BUILD_DIR}/$(MY_PROJECT_NAME).bin
 print: main.c .gitignore
 	@echo '|' $@ '|' $^ '|' $< '|'
 
-.PHONY: all clean print
+.PHONY: all cmake build clean flash print
