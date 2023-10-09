@@ -10,12 +10,9 @@ int main(void){
     // while(1) toggle_delayed(1000);
 
     OLED_GPIOinit();
-    // _delay_ms(300);
     OLEDinitChr4bit();
-    OLEDreset();
     OLEDclear();
     OLEDhome();
-    OLEDcursor(0,0);
     OLEDsendStr("Hello");
     OLEDcursor(0,1);
     OLEDsendStr("World");

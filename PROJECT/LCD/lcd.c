@@ -187,32 +187,33 @@ void OLEDinstr_sync(){
 	_delay_us(1);
 }
 
-uint8_t OLEDinitChr4bit(){	//OLED init.
-	//Wait for power stabilization
-	_delay_ms(100);
+// Write half instruction (4 bits)
+#define WRITE_4BIT_INSTR(h_data) \
+	port3 &= ~(_BV(RS)|_BV(RW)); \
+	_delay_us(1); /* >40ns */ \
+	port3 |= _BV(E); \
+	portDB &= ~0b1111; \
+	portDB |= h_data; \
+	_delay_us(1); /* >80ns */ \
+	port3 &= ~_BV(E); \
+	_delay_us(1); /* >10ns */ 
 
-	//function set 3 8bitowe ramki
-	ddrDB |= 0b1111;
-	port3 &= ~(_BV(RS)|_BV(RW));
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0010;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0010;//set4bits
-	_delay_us(1);
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b1000;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
+
+uint8_t OLEDinitChr4bit(){	//OLED init.
+	_delay_ms(110);
+	WRITE_4BIT_INSTR(0b0011);
+	_delay_ms(6); // >4.1ms
+	WRITE_4BIT_INSTR(0b0011);
+	_delay_us(150); // >100us
+	WRITE_4BIT_INSTR(0b0011);
+	_delay_us(100); // >100us
+	WRITE_4BIT_INSTR(0b0010);
+	_delay_us(100); // >100us
+
+	WS0010ChckBsyFl();
+
+	WRITE_4BIT_INSTR(0b0010);
+	WRITE_4BIT_INSTR(0b1000);
 	WS0010ChckBsyFl();
 
 	//Display ON/OFF controll
@@ -238,67 +239,7 @@ uint8_t OLEDinitChr4bit(){	//OLED init.
 	return WS0010ChckBsyFl();
 }
 
-void OLEDreset(){//poco
-	//synchronization funk
-	OLEDinstr_sync();
-	WS0010ChckBsyFl();
-
-	//function set
-	ddrDB |= 0b1111;
-	port3 &= ~(_BV(RS)|_BV(RW));
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0010;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0010;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_ms(5);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b1001;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	WS0010ChckBsyFl();
-
-	//initial command srtting
-	ddrDB |= 0b1111;
-	port3 &= ~(_BV(RS)|_BV(RW));
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b1111;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_ms(5);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0000;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	WS0010ChckBsyFl();
-
-	//Display RAM write
-	ddrDB |= 0b1111;
-	port3 &= ~_BV(RW);
-	port3 |= _BV(RS)|_BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b1111;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_ms(5);
-	port3 |= _BV(E);
-	portDB &= ~0b1111;	//zer
-	portDB |= 0b0000;//set4bits
-	_delay_us(1);
-	port3 &= ~_BV(E);
-	_delay_us(1);
-	WS0010ChckBsyFl();
+void OLEDreset(){
 }
 
 void OLEDclear(){
